@@ -11,6 +11,6 @@ export default defineConfig({
   },
   engine: 'classic',
   datasource: {
-    url: env('DATABASE_URL'),
+    url: process.env.DATABASE_URL || 'postgresql://nowayhome:nowayhome@127.0.0.1:5433/nowayhome?schema=public',
   },
 });
