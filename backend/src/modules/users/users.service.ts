@@ -43,7 +43,7 @@ export class UsersService {
 
       // 2. Upsert CustomerProfile if dateOfBirth or gender are provided
       if (dateOfBirth !== undefined || gender !== undefined) {
-        const profileDataToUpdate: any = {};
+        const profileDataToUpdate: Pick<Prisma.CustomerProfileUncheckedCreateInput, 'dateOfBirth' | 'gender'> = {};
         if (dateOfBirth !== undefined) {
           const [day, month, year] = dateOfBirth.split('-');
           profileDataToUpdate.dateOfBirth = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));

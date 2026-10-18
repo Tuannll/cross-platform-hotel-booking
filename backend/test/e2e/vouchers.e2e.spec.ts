@@ -51,10 +51,11 @@ describe('voucher E2E', () => {
     });
     voucherId = voucher.id.toString();
 
-    const login = await request(app.getHttpServer())
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    const login = await request(server)
       .post('/api/auth/login')
       .send({ email: fixture.customer.email, password: fixture.customer.password });
-    token = login.body.accessToken;
+    token = (login.body as unknown as { accessToken: string }).accessToken;
   });
 
   afterAll(async () => {
@@ -63,7 +64,7 @@ describe('voucher E2E', () => {
   });
 
   function createBooking() {
-    return request(app.getHttpServer())
+    return request(app.getHttpServer() as Parameters<typeof request>[0])
       .post('/api/bookings')
       .set('Authorization', `Bearer ${token}`)
       .send({

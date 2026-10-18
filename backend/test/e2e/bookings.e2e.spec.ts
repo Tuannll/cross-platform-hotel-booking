@@ -21,10 +21,11 @@ describe('bookings E2E', () => {
   beforeEach(async () => {
     await truncateTestDatabase(prisma);
     fixture = await createBookingFixture(prisma);
-    const login = await request(app.getHttpServer())
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    const login = await request(server)
       .post('/api/auth/login')
       .send({ email: fixture.customer.email, password: fixture.customer.password });
-    token = login.body.accessToken;
+    token = (login.body as unknown as { accessToken: string }).accessToken;
   });
 
   afterAll(async () => {
@@ -33,7 +34,7 @@ describe('bookings E2E', () => {
   });
 
   function createBooking() {
-    return request(app.getHttpServer())
+    return request(app.getHttpServer() as Parameters<typeof request>[0])
       .post('/api/bookings')
       .set('Authorization', `Bearer ${token}`)
       .send({
@@ -61,13 +62,15 @@ describe('bookings E2E', () => {
     const booking = await createBooking().expect(201);
 
     expect(await availability()).toEqual([0, 0]);
-    await request(app.getHttpServer())
-      .post(`/api/bookings/${booking.body.id}/cancel`)
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
+    const bookingBody = booking.body as unknown as { id: string };
+    await request(server)
+      .post(`/api/bookings/${bookingBody.id}/cancel`)
       .set('Authorization', `Bearer ${token}`)
       .expect(201);
     expect(await availability()).toEqual([1, 1]);
-    await request(app.getHttpServer())
-      .post(`/api/bookings/${booking.body.id}/cancel`)
+    await request(server)
+      .post(`/api/bookings/${bookingBody.id}/cancel`)
       .set('Authorization', `Bearer ${token}`)
       .expect(400);
     expect(await availability()).toEqual([1, 1]);

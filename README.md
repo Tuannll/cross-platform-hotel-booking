@@ -203,8 +203,9 @@ pj-appR/NoWayHomee/
 
 ## 🔒 Báo cáo An toàn & Phụ thuộc (Security & Dependency Audit)
 
-- **Backend & Web**: Cây phụ thuộc chuẩn hóa qua `pnpm`, không có cảnh báo bảo mật nghiêm trọng trên các package runtime.
-- **Mobile Expo**: Ứng dụng chạy trên nền tảng Expo SDK 54 / React Native 0.81. Các phụ thuộc trực tiếp quan trọng (`axios@1.20.0`, `expo-secure-store`, v.v.) đã được cập nhật phiên bản vá mới nhất. Các cảnh báo transitive nội bộ từ bundler Metro/Babel cũ thuộc Expo SDK đã được ghi nhận và cô lập an toàn trong môi trường đồ án môn học.
+- **Backend & Web**: Cây phụ thuộc dùng `pnpm`; kiểm tra chất lượng chạy trong CI.
+- **Mobile Expo**: `npm audit --omit=dev` ngày 2026-10-18 báo 49 cảnh báo transitive (1 critical, 31 high, 16 moderate, 1 low), chủ yếu qua Expo CLI/Metro/Babel. `npm audit fix --force` đề xuất hạ `expo` xuống `44.0.6`, không tương thích Expo SDK 54 nên không áp dụng.
+- **Kiểm tra hiện tại**: `npm run lint` và `npm run typecheck` trong `mobile-app` đều pass. Cập nhật Expo SDK chỉ thực hiện theo lộ trình tương thích chính thức, rồi chạy lại `npm audit --omit=dev`.
 
 ---
 

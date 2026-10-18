@@ -214,9 +214,9 @@ export class PropertiesService {
     // Availability Filter
     if (dateRange) {
       where.roomTypes = {
-        ...(where.roomTypes as object || {}),
+        ...(where.roomTypes || {}),
         some: {
-          ...(where.roomTypes?.some as object || {}),
+          ...(where.roomTypes?.some || {}),
           isActive: true,
           deletedAt: null,
           ratePlans: {

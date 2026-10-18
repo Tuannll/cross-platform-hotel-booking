@@ -83,7 +83,7 @@ interface MediaImageItem {
   caption?: string;
 }
 
-interface PayPartnerDepositWithdrawal {
+export interface PayPartnerDepositWithdrawal {
   id?: string;
   type: string;
   amount: number;
@@ -103,7 +103,7 @@ interface PayPartnerRecord {
   partnerDepositsAndWithdrawals?: PayPartnerDepositWithdrawal[];
 }
 
-interface PaySystemTx {
+export interface PaySystemTx {
   id: string;
   type: string;
   amount: number;
@@ -114,7 +114,7 @@ interface PaySystemTx {
   createdAt: string;
 }
 
-interface PayTaxRecord {
+export interface PayTaxRecord {
   month: string;
   amount: number;
   createdAt: string;
@@ -134,7 +134,7 @@ interface PayDbState {
   system?: PaySystemRecord;
 }
 
-interface PayTransactionItem {
+export interface PayTransactionItem {
   id: string;
   bookingId?: string;
   bookingCode?: string;
@@ -154,7 +154,7 @@ interface PayTransactionItem {
   createdAt: Date | string;
 }
 
-interface MonthlyTaxItem {
+export interface MonthlyTaxItem {
   month: string;
   commission: number;
   taxDue: number;
@@ -2867,7 +2867,7 @@ export class CompatService {
     return { transactions };
   }
 
-  async getAdminTransactionsDashboard(user: AuthenticatedUser) {
+  async getAdminTransactionsDashboard() {
     const db = this.readPayDb();
     const today = this.todayDateKey();
 
@@ -3111,7 +3111,7 @@ export class CompatService {
     const startMonth = new Date(2026, 2, 1);
     const endMonth = new Date();
 
-    let currentMonth = new Date(startMonth);
+    const currentMonth = new Date(startMonth);
     while (currentMonth <= endMonth) {
       const monthKey = `${currentMonth.getFullYear()}-${String(currentMonth.getMonth() + 1).padStart(2, '0')}`;
       const commission = monthlyCommissions[monthKey] || 0;

@@ -477,8 +477,8 @@ export class CompatController {
 
   @Roles(Role.ADMIN)
   @Get('admin/transactions/dashboard')
-  getAdminTransactionsDashboard(@CurrentUser() user: AuthenticatedUser) {
-    return this.compatService.getAdminTransactionsDashboard(user);
+  getAdminTransactionsDashboard() {
+    return this.compatService.getAdminTransactionsDashboard();
   }
 
   @Roles(Role.ADMIN)

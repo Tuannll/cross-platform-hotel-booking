@@ -27,24 +27,26 @@ describe('auth E2E', () => {
 
   it('revokes refreshed access token after logout', async () => {
     const fixture = await createBookingFixture(prisma);
-    const server = app.getHttpServer();
+    const server = app.getHttpServer() as Parameters<typeof request>[0];
     const login = await request(server)
       .post('/api/auth/login')
       .send({ email: fixture.customer.email, password: fixture.customer.password });
 
     expect(login.status).toBe(201);
+    const loginBody = login.body as unknown as { refreshToken: string };
     const refresh = await request(server)
       .post('/api/auth/refresh')
-      .send({ refreshToken: login.body.refreshToken });
+      .send({ refreshToken: loginBody.refreshToken });
 
     expect(refresh.status).toBe(201);
+    const refreshBody = refresh.body as unknown as { accessToken: string };
     await request(server)
       .post('/api/auth/logout')
-      .set('Authorization', `Bearer ${refresh.body.accessToken}`)
+      .set('Authorization', `Bearer ${refreshBody.accessToken}`)
       .expect(200);
     await request(server)
       .get('/api/auth/me')
-      .set('Authorization', `Bearer ${refresh.body.accessToken}`)
+      .set('Authorization', `Bearer ${refreshBody.accessToken}`)
       .expect(401);
   });
 });
