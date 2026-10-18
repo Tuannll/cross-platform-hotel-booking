@@ -12,7 +12,9 @@ describe('AllExceptionsFilter', () => {
       }),
     };
 
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     filter.catch(new Error('database password leaked'), host as never);
+    consoleSpy.mockRestore();
 
     expect(json).toHaveBeenCalledWith(
       expect.objectContaining({

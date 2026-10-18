@@ -2776,9 +2776,9 @@ export class CompatService {
 
     db.partners[partnerIdStr] = {
       registered: true,
-      bankName: body.bankName,
-      bankAccountNumber: body.bankAccountNumber,
-      bankAccountHolder: body.bankAccountHolder || partner.businessName,
+      bankName: typeof body.bankName === 'string' ? body.bankName : '',
+      bankAccountNumber: typeof body.bankAccountNumber === 'string' ? body.bankAccountNumber : '',
+      bankAccountHolder: typeof body.bankAccountHolder === 'string' ? body.bankAccountHolder : partner.businessName,
       virtualCustomerAccountNumber: randomAccountNumber,
     };
 
@@ -3167,9 +3167,9 @@ export class CompatService {
       id: `SYS-TX-${Math.floor(100000 + Math.random() * 900000)}`,
       type,
       amount,
-      targetBank: body.targetBank || 'Vietcombank',
-      targetAccount: body.targetAccount || '110011011102',
-      targetHolder: body.targetHolder || 'Company Account',
+      targetBank: typeof body.targetBank === 'string' ? body.targetBank : 'Vietcombank',
+      targetAccount: typeof body.targetAccount === 'string' ? body.targetAccount : '110011011102',
+      targetHolder: typeof body.targetHolder === 'string' ? body.targetHolder : 'Company Account',
       status: 'SUCCESS',
       createdAt: new Date().toISOString(),
     };
