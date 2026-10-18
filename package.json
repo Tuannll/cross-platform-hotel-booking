@@ -1,0 +1,8 @@
+{
+  "scripts": {
+    "check": "pnpm --filter backend run test && pnpm --filter backend run typecheck && pnpm --filter nowayhome-web run typecheck && pnpm run build:web",
+    "build:web": "pnpm --filter webadmin run build && pnpm --filter webpartner run build && pnpm --filter fe-web-user run build",
+    "db:migrate": "pnpm --filter backend exec prisma migrate deploy --schema prisma/schema.prisma",
+    "db:seed": "pnpm --filter backend run seed"
+  }
+}

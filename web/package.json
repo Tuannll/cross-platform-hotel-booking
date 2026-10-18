@@ -1,0 +1,20 @@
+{
+  "name": "nowayhome-web",
+  "private": true,
+  "version": "1.0.0",
+  "workspaces": [
+    "apps/admin",
+    "apps/partner",
+    "apps/customer",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:admin": "npm --workspace apps/admin run dev",
+    "dev:partner": "npm --workspace apps/partner run dev",
+    "dev:customer": "npm --workspace apps/customer run dev",
+    "typecheck": "pnpm --filter webadmin run typecheck && pnpm --filter webpartner run typecheck",
+    "build:admin": "npm --workspace apps/admin run build",
+    "build:partner": "npm --workspace apps/partner run build",
+    "build:customer": "npm --workspace apps/customer run build"
+  }
+}
