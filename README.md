@@ -1,19 +1,43 @@
-<div align="center">
-
 # 🏨 NoWayHome
 
-**Nền tảng đặt phòng khách sạn đa nền tảng (Web & Mobile) — Đồ án môn học.**
+<div align="center">
 
-[![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?style=flat-square&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![NestJS](https://img.shields.io/badge/NestJS-11.x-E0234E?style=flat-square&logo=nestjs&logoColor=white)](https://nestjs.com/)
-[![React](https://img.shields.io/badge/React-18%20%2F%2019-61DAFB?style=flat-square&logo=react&logoColor=black)](https://react.dev/)
-[![Expo](https://img.shields.io/badge/Expo-54-000020?style=flat-square&logo=expo&logoColor=white)](https://expo.dev/)
-[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
-[![License](https://img.shields.io/badge/License-UNLICENSED-lightgrey?style=flat-square)](LICENSE)
+**Nền tảng Đặt phòng Khách sạn Đa nền tảng (Web & Mobile) — Đồ án Môn học**  
+*Cross-Platform Hotel Booking System with NestJS, React, Expo & PostgreSQL*
 
-**[✨ Tính năng](#features) • [🚀 Quick Start](#quick-start) • [🧪 Kiểm thử](#testing) • [🧱 Cấu trúc](#architecture) • [🛠️ Công nghệ](#tech-stack) • [❓ FAQ](#faq)**
+[![Node.js](https://img.shields.io/badge/Node.js-22.x-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![NestJS](https://img.shields.io/badge/NestJS-11.x-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![React](https://img.shields.io/badge/React-18%20%2F%2019-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![Expo](https://img.shields.io/badge/Expo-54-000020?logo=expo&logoColor=white)](https://expo.dev/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-Postgres%2016-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-UNLICENSED-lightgrey)](LICENSE)
+
+---
+
+[📌 Tổng quan](#-tổng-quan) •
+[✨ Tính năng](#-tính-năng) •
+[🏛️ Kiến trúc](#-kiến-trúc--an-toàn-dữ-liệu) •
+[🛠️ Công nghệ](#-công-nghệ-sử-dụng) •
+[⚡ Quick Start](#-quick-start) •
+[🌐 Cổng truy cập](#-danh-sách-địa-chỉ-truy-cập) •
+[🧪 Kiểm thử](#-kiểm-thử--xác-thực-chất-lượng) •
+[📁 Cấu trúc](#-cấu-trúc-dự-án) •
+[❓ FAQ](#-faq)
 
 </div>
+
+---
+
+<a id="overview"></a>
+## 📌 Tổng quan
+
+**NoWayHome** là hệ thống đặt phòng khách sạn toàn diện hỗ trợ đa nền tảng (Web & Mobile), được xây dựng phục vụ đồ án môn học. Hệ thống cung cấp trải nghiệm liền mạch cho 3 đối tượng người dùng: **Khách hàng** (Web & Mobile App), **Đối tác khách sạn** (Web Partner), và **Quản trị viên** (Web Admin).
+
+Giải pháp áp dụng mô hình phân lớp rõ ràng, cơ chế kiểm soát tồn kho chặt chẽ chống đặt trùng phòng (concurrency safety), xác thực an toàn với thu hồi phiên làm việc (session revocation) và bộ kiểm thử E2E tự động trên cơ sở dữ liệu thật.
+
+> [!NOTE]
+> Tính năng thanh toán được thiết kế dưới dạng **Demo Simulation** phục vụ bảo vệ đồ án môn học. Hệ thống không lưu trữ thẻ thật, không kết nối cổng thanh toán thương mại thật và không phát sinh chi phí giao dịch.
 
 ---
 
@@ -28,13 +52,78 @@
 | **Web Admin** | Quản trị viên | Dashboard thống kê doanh thu, duyệt/từ chối đối tác, quản lý người dùng, quản lý voucher hệ thống, kiểm duyệt đánh giá. |
 | **Backend API** | Hệ thống lõi | NestJS 11 + Prisma ORM, phân quyền RBAC, JWT session revocation, inventory locking chống đặt trùng phòng, E2E database testing. |
 
-> [!NOTE]
-> Tính năng thanh toán được thiết kế dưới dạng **Demo Simulation** phục vụ bảo vệ đồ án môn học. Hệ thống không lưu trữ thẻ thật, không kết nối cổng thanh toán thương mại thật và không phát sinh chi phí giao dịch.
+---
+
+<a id="architecture"></a>
+## 🏛️ Kiến trúc & An toàn Dữ liệu
+
+### 1. Phân rã Phân hệ Chức năng (Logical Modules)
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                        NOWAYHOME HOTEL SYSTEM                          │
+├─────────────┬─────────────┬──────────────┬──────────────┬──────────────┤
+│  Auth &     │  Properties │   Bookings   │   Payments   │   Vouchers   │
+│  RBAC/JWT   │   & Rooms   │ & Concurrency│    (Demo)    │ & Promotions │
+└─────────────┴─────────────┴──────────────┴──────────────┴──────────────┘
+```
+
+### 2. Sơ đồ Kiến trúc Runtime (Runtime Topology)
+
+```text
+                      [ Khách hàng / Đối tác / Quản trị viên ]
+                                          │
+                ┌─────────────────────────┼─────────────────────────┐
+                ▼                         ▼                         ▼
+       ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+       │   Mobile App    │       │ 3x Web Portals  │       │   API Docs UI   │
+       │  (Expo SDK 54)  │       │ (Admin/Partner/ │       │  (Swagger UI)   │
+       │    Port 8081    │       │    Customer)    │       │    Port 3001    │
+       └────────┬────────┘       └────────┬────────┘       └────────┬────────┘
+                │ Ports 5173-5175         │                         │
+                └─────────────────────────┼─────────────────────────┘
+                                          │ REST API / JWT
+                                          ▼
+                             ┌─────────────────────────┐
+                             │   Backend API (NestJS)  │
+                             │       Port 3001         │
+                             └────────────┬────────────┘
+                                          │ Prisma ORM
+                                          ▼
+                             ┌─────────────────────────┐
+                             │  PostgreSQL 16 (Docker) │
+                             │       Port 5433         │
+                             └─────────────────────────┘
+```
+
+### 3. Quy tắc An toàn Dữ liệu Cốt lõi
+
+- **Kiểm soát Tồn kho Nghiêm ngặt (Concurrency Safety)**: Đặt phòng áp dụng cơ chế khóa bi quan (`FOR UPDATE`) trên bảng `daily_rates` và cập nhật có điều kiện trên bảng khuyến mãi để ngăn chặn 100% tình trạng over-booking và vượt giới hạn voucher khi nhiều người thao tác cùng lúc.
+- **Cô lập Database Kiểm thử (Database Isolation)**: E2E Tests sử dụng database riêng `nowayhome_test`. Script kiểm tra an toàn sẽ lập tức từ chối chạy nếu URL không chứa đúng hậu tố `nowayhome_test`, đảm bảo không bao giờ ảnh hưởng dữ liệu demo `nowayhome`.
+- **Bảo mật Phiên làm việc (Session Revocation)**: JWT access token được liên kết với `sessionId`. Khi người dùng đăng xuất, session bị thu hồi và token tương ứng lập tức vô hiệu hóa trên toàn hệ thống.
+- **CORS & Whitelist**: Chỉ các origin được khai báo rõ ràng trong `CORS_ORIGINS` mới được phép gửi cookie và thông tin chứng thực.
+
+---
+
+<a id="tech-stack"></a>
+## 🛠️ Công nghệ sử dụng
+
+| Phân hệ / Danh mục | Công nghệ | Mục đích & Mô tả |
+|---|---|---|
+| **Backend Core** | [NestJS 11](https://nestjs.com/) + TypeScript | RESTful API, Guards phân quyền RBAC, Swagger OpenAPI |
+| **ORM & Database** | [Prisma ORM](https://www.prisma.io/) + [PostgreSQL 16](https://www.postgresql.org/) | Quản lý schema, migrations, concurrency locking |
+| **Web Customer** | [React 19](https://react.dev/) + [Vite](https://vitejs.dev/) + Tailwind CSS | Cổng tra cứu và đặt phòng trực tuyến cho khách hàng |
+| **Web Partner** | [React 18](https://react.dev/) + [Vite](https://vitejs.dev/) + Tailwind CSS | Cổng quản lý chỗ nghỉ, cấu hình phòng và bảng giá |
+| **Web Admin** | [React 18](https://react.dev/) + [Vite](https://vitejs.dev/) + Tailwind CSS | Cổng quản trị hệ thống, duyệt đối tác, thống kê doanh thu |
+| **Mobile Application** | [React Native](https://reactnative.dev/) + [Expo SDK 54](https://expo.dev/) | Ứng dụng di động khách hàng đa nền tảng (iOS & Android) |
+| **State & Data Fetching** | [TanStack React Query v5](https://tanstack.com/query) + [Zustand](https://zustand-demo.pmnd.rs/) | Quản lý server state, bộ nhớ đệm client và global store |
+| **DevOps & Tooling** | [Docker Compose](https://www.docker.com/) + pnpm workspace | Đóng gói PostgreSQL, quản lý monorepo đa ứng dụng |
+| **Testing Strategy** | Jest, Supertest, TSX | Kiểm thử Unit tests và E2E trên database PostgreSQL thật |
 
 ---
 
 <a id="quick-start"></a>
-## 🚀 Quick Start
+## ⚡ Quick Start
 
 ### 1. Yêu cầu môi trường
 
@@ -134,16 +223,20 @@ cd mobile-app
 npx expo start
 ```
 
-#### 🌐 Danh sách địa chỉ truy cập:
+---
 
-| Ứng dụng | Địa chỉ URL | Mô tả |
-| -------- | ----------- | ----- |
-| **Web Admin** | http://localhost:5173 | Cổng quản trị hệ thống |
-| **Web Partner** | http://localhost:5174 | Cổng đối tác khách sạn |
-| **Web Customer** | http://localhost:5175 | Cổng web khách hàng |
-| **Backend API Docs** | http://localhost:3001/api-docs | Swagger API Documentation |
-| **Health Check** | http://localhost:3001/api/healthz | API kiểm tra trạng thái máy chủ & DB |
-| **Mobile Expo** | http://localhost:8081 | Giao diện phát triển Expo Metro |
+<a id="endpoints"></a>
+## 🌐 Danh sách Địa chỉ Truy cập
+
+| Phân hệ / Ứng dụng | Địa chỉ URL | Cổng (Port) | Mô tả & Tài khoản mặc định |
+|---|---|---|---|
+| **Web Admin** | [http://localhost:5173](http://localhost:5173) | `5173` | Cổng quản trị (`admin@nowayhome.local` / `Password123!`) |
+| **Web Partner** | [http://localhost:5174](http://localhost:5174) | `5174` | Cổng đối tác (`partner@nowayhome.local` / `Password123!`) |
+| **Web Customer** | [http://localhost:5175](http://localhost:5175) | `5175` | Cổng web khách hàng (`customer@nowayhome.local` / `Password123!`) |
+| **Backend REST API** | [http://localhost:3001](http://localhost:3001) | `3001` | Máy chủ API backend lõi |
+| **Swagger API Docs** | [http://localhost:3001/api-docs](http://localhost:3001/api-docs) | `3001` | Tài liệu tương tác OpenAPI / Swagger |
+| **Health Check API** | [http://localhost:3001/api/healthz](http://localhost:3001/api/healthz) | `3001` | API kiểm tra trạng thái máy chủ & DB |
+| **Mobile Expo Metro** | [http://localhost:8081](http://localhost:8081) | `8081` | Giao diện phát triển Expo Metro |
 
 ---
 
@@ -179,8 +272,8 @@ pnpm run build:web
 
 ---
 
-<a id="architecture"></a>
-## 🧱 Cấu trúc Dự án
+<a id="structure"></a>
+## 📁 Cấu trúc Dự án
 
 ```text
 cross-platform-hotel-booking/
@@ -199,25 +292,6 @@ cross-platform-hotel-booking/
 ├── start-all.bat             # Script khởi động tự động toàn bộ ứng dụng
 └── stop-all.bat              # Script dừng an toàn mọi tiến trình
 ```
-
----
-
-## 🛡️ Quy tắc Kiến trúc & An toàn Dữ liệu
-
-- **Kiểm soát Tồn kho Nghiêm ngặt (Concurrency Safety)**: Đặt phòng áp dụng cơ chế khóa bi quan (`FOR UPDATE`) trên bảng `daily_rates` và cập nhật có điều kiện trên bảng khuyến mãi để ngăn chặn 100% tình trạng over-booking và vượt giới hạn voucher khi nhiều người bấm cùng lúc.
-- **Cô lập Database Kiểm thử (Database Isolation)**: E2E Tests sử dụng database riêng `nowayhome_test`. Script kiểm tra an toàn sẽ lập tức từ chối chạy nếu URL không chứa đúng hậu tố `nowayhome_test`, đảm bảo không bao giờ ảnh hưởng dữ liệu demo `nowayhome`.
-- **Bảo mật Phiên làm việc (Session Revocation)**: JWT access token được liên kết với `sessionId`. Khi người dùng đăng xuất, session bị thu hồi và token tương ứng lập tức vô hiệu hóa trên toàn hệ thống.
-- **CORS & Whitelist**: Chỉ các origin được khai báo rõ ràng trong `CORS_ORIGINS` mới được phép gửi cookie và thông tin chứng thực.
-
----
-
-<a id="tech-stack"></a>
-## 🛠️ Công nghệ sử dụng
-
-- **Backend**: NestJS, TypeScript, Prisma ORM, PostgreSQL 16, Jest, Supertest, Swagger.
-- **Web Applications**: React, Vite, Tailwind CSS, TanStack Query, Lucide Icons, Recharts.
-- **Mobile Application**: React Native, Expo Router, Zustand, Axios, Expo SecureStore.
-- **DevOps & Tooling**: Docker, pnpm workspace, GitHub Actions CI.
 
 ---
 
@@ -251,7 +325,7 @@ Cổng 5433 được sử dụng để tránh xung đột với các dịch vụ
 
 ---
 
-## ⚠️ Lưu ý An toàn & Phụ thuộc
+## 🔒 Ghi chú An toàn & Phụ thuộc
 
 - **Backend & Web**: Quản lý qua `pnpm workspace`, toàn bộ typecheck và build đã pass trên CI.
 - **Mobile Expo**: `npm audit --omit=dev` ghi nhận một số cảnh báo phụ thuộc transitive từ Expo CLI / Metro / Babel SDK 54. Không dùng `npm audit fix --force` vì sẽ hạ bậc phiên bản Expo gây lỗi runtime.
