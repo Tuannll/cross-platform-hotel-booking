@@ -11,12 +11,13 @@
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![License](https://img.shields.io/badge/License-UNLICENSED-lightgrey?style=flat-square)](LICENSE)
 
-**[✨ Tính năng](#-tính-năng) • [🚀 Quick Start](#-quick-start) • [🧪 Kiểm thử & E2E](#-kiểm-thử--xác-thực-chất-lượng) • [❓ FAQ](#-faq)**
+**[✨ Tính năng](#features) • [🚀 Quick Start](#quick-start) • [🧪 Kiểm thử](#testing) • [🧱 Cấu trúc](#architecture) • [🛠️ Công nghệ](#tech-stack) • [❓ FAQ](#faq)**
 
 </div>
 
 ---
 
+<a id="features"></a>
 ## ✨ Tính năng
 
 | Phân hệ | Vai trò | Chức năng chính |
@@ -32,6 +33,7 @@
 
 ---
 
+<a id="quick-start"></a>
 ## 🚀 Quick Start
 
 ### 1. Yêu cầu môi trường
@@ -145,15 +147,22 @@ npx expo start
 
 ---
 
+<a id="testing"></a>
 ## 🧪 Kiểm thử & Xác thực chất lượng
 
-Dự án trang bị bộ kiểm thử tự động toàn diện từ Unit Test đến E2E Database Test:
+Chạy toàn bộ kiểm tra chất lượng (Unit tests, Typecheck, Build Web) bằng 1 lệnh:
 
 ```powershell
-# 1. Chạy Backend Unit Tests (12 tests)
+pnpm run check
+```
+
+Hoặc chạy chi tiết từng phần kiểm thử:
+
+```powershell
+# 1. Backend Unit Tests (12 tests)
 pnpm --filter backend run test
 
-# 2. Chạy E2E Tests trên PostgreSQL thật (Database test riêng biệt)
+# 2. E2E Tests trên PostgreSQL thật (Database test riêng biệt)
 $env:TEST_DATABASE_URL="postgresql://nowayhome:nowayhome@127.0.0.1:5433/nowayhome_test?schema=public"
 pnpm --filter backend run test:e2e:prepare
 pnpm --filter backend run test:e2e
@@ -170,10 +179,11 @@ pnpm run build:web
 
 ---
 
+<a id="architecture"></a>
 ## 🧱 Cấu trúc Dự án
 
 ```text
-pj-appR/NoWayHomee/
+cross-platform-hotel-booking/
 ├── backend/                  # NestJS 11 REST API
 │   ├── prisma/               # Schema Prisma, migrations, seed data
 │   ├── src/                  # Modules: auth, bookings, properties, payments, vouchers, ...
@@ -201,44 +211,51 @@ pj-appR/NoWayHomee/
 
 ---
 
-## 🔒 Báo cáo An toàn & Phụ thuộc (Security & Dependency Audit)
-
-- **Backend & Web**: Cây phụ thuộc dùng `pnpm`; kiểm tra chất lượng chạy trong CI.
-- **Mobile Expo**: `npm audit --omit=dev` ngày 2026-10-18 báo 49 cảnh báo transitive (1 critical, 31 high, 16 moderate, 1 low), chủ yếu qua Expo CLI/Metro/Babel. `npm audit fix --force` đề xuất hạ `expo` xuống `44.0.6`, không tương thích Expo SDK 54 nên không áp dụng.
-- **Kiểm tra hiện tại**: `npm run lint` và `npm run typecheck` trong `mobile-app` đều pass. Cập nhật Expo SDK chỉ thực hiện theo lộ trình tương thích chính thức, rồi chạy lại `npm audit --omit=dev`.
-
----
-
-## ❓ FAQ
-
-<details>
-<summary><b>1. Làm thế nào để reset lại toàn bộ dữ liệu về trạng thái ban đầu?</b></summary>
-<br>
-Chỉ cần chạy lệnh:
-<code>pnpm --filter backend run seed</code>
-Script sẽ làm mới và tái tạo lại các tài khoản mẫu, khách sạn, phòng và voucher mặc định.
-</details>
-
-<details>
-<summary><b>2. Tại sao Docker PostgreSQL sử dụng cổng 5433 thay vì 5432?</b></summary>
-<br>
-Cổng 5433 được sử dụng để tránh xung đột với các dịch vụ PostgreSQL cục bộ đã được cài đặt sẵn trên máy tính của người chấm/thành viên khác, đảm bảo dự án chạy ổn định mà không yêu cầu gỡ cài đặt phần mềm có sẵn.
-</details>
-
-<details>
-<summary><b>3. Làm sao để kiểm tra nhanh luồng đặt phòng và thanh toán?</b></summary>
-<br>
-Đăng nhập tài khoản Customer (<code>customer@nowayhome.local</code>), chọn khách sạn <i>Khách sạn Hà Nội Luxury & Spa</i>, chọn ngày, nhập voucher <code>SUMMER2026</code> và bấm <i>Xác nhận thanh toán demo</i>. Đơn đặt phòng sẽ lập tức chuyển sang trạng thái <b>Confirmed (Đã thanh toán)</b>.
-</details>
-
----
-
+<a id="tech-stack"></a>
 ## 🛠️ Công nghệ sử dụng
 
 - **Backend**: NestJS, TypeScript, Prisma ORM, PostgreSQL 16, Jest, Supertest, Swagger.
 - **Web Applications**: React, Vite, Tailwind CSS, TanStack Query, Lucide Icons, Recharts.
 - **Mobile Application**: React Native, Expo Router, Zustand, Axios, Expo SecureStore.
 - **DevOps & Tooling**: Docker, pnpm workspace, GitHub Actions CI.
+
+---
+
+<a id="faq"></a>
+## ❓ FAQ
+
+<details>
+<summary><b>1. Làm thế nào để reset lại toàn bộ dữ liệu về trạng thái ban đầu?</b></summary>
+<br>
+
+Chỉ cần chạy lệnh:
+```powershell
+pnpm --filter backend run seed
+```
+Script sẽ làm mới và tái tạo lại các tài khoản mẫu, khách sạn, phòng và voucher mặc định.
+</details>
+
+<details>
+<summary><b>2. Tại sao Docker PostgreSQL sử dụng cổng 5433 thay vì 5432?</b></summary>
+<br>
+
+Cổng 5433 được sử dụng để tránh xung đột với các dịch vụ PostgreSQL cục bộ đã được cài đặt sẵn trên máy tính của người chấm/thành viên khác, đảm bảo dự án chạy ổn định mà không yêu cầu gỡ cài đặt phần mềm có sẵn.
+</details>
+
+<details>
+<summary><b>3. Làm sao để kiểm tra nhanh luồng đặt phòng và thanh toán?</b></summary>
+<br>
+
+Đăng nhập tài khoản Customer (`customer@nowayhome.local`), chọn khách sạn *Khách sạn Hà Nội Luxury & Spa*, chọn ngày, nhập voucher `SUMMER2026` và bấm *Xác nhận thanh toán demo*. Đơn đặt phòng sẽ lập tức chuyển sang trạng thái **Confirmed (Đã thanh toán)**.
+</details>
+
+---
+
+## ⚠️ Lưu ý An toàn & Phụ thuộc
+
+- **Backend & Web**: Quản lý qua `pnpm workspace`, toàn bộ typecheck và build đã pass trên CI.
+- **Mobile Expo**: `npm audit --omit=dev` ghi nhận một số cảnh báo phụ thuộc transitive từ Expo CLI / Metro / Babel SDK 54. Không dùng `npm audit fix --force` vì sẽ hạ bậc phiên bản Expo gây lỗi runtime.
+- **Trạng thái kiểm tra**: `npm run lint` và `npm run typecheck` trong `mobile-app` đạt 100% pass.
 
 ---
 
