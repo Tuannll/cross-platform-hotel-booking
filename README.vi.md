@@ -13,12 +13,12 @@
 [![Docker](https://img.shields.io/badge/Docker-Postgres%2016-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-UNLICENSED-lightgrey)](LICENSE)
 
----
+[English](README.md) | **Tiếng Việt**
 
 [📌 Tổng quan](#-tổng-quan) •
 [✨ Tính năng](#-tính-năng) •
-[🏛️ Kiến trúc](#-kiến-trúc--an-toàn-dữ-liệu) •
-[🛠️ Công nghệ](#-công-nghệ-sử-dụng) •
+[🏛️ Kiến trúc](#architecture) •
+[🛠️ Công nghệ](#tech-stack) •
 [⚡ Quick Start](#-quick-start) •
 [🌐 Cổng truy cập](#-danh-sách-địa-chỉ-truy-cập) •
 [🧪 Kiểm thử](#-kiểm-thử--xác-thực-chất-lượng) •
